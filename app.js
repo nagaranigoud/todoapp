@@ -13,7 +13,7 @@ let database = null
 
 const initialzeDbAndServer = async () => {
   try {
-    databases = await open({
+    database = await open({
       filename: databasePath,
       driver: sqlite3.Database,
     })
@@ -31,14 +31,14 @@ initialzeDbAndServer()
 const hasPriorityAndStatusProperties = requestQuery => {
   return (
     requestQuery.priority !== undefined && requestQuery.status !== undefined
-  )
+  );
 }
 
-const hasPriorityProperty = requestQuery => {
+const hasPriorityProperty = (requestQuery) => {
   return requestQuery.priority !== undefined
 }
 
-const hasStatusProperty = requestQuery => {
+const hasStatusProperty = (requestQuery) => {
   return requestQuery.status !== undefined
 }
 
@@ -47,7 +47,7 @@ app.get('/todos/', async (request, response) => {
   let getTodosQuery = ''
   const {search_q = '', priority, status} = request.query
 
-  switch (ture) {
+  switch (true) {
     case hasPriorityAndStatusProperties(request.query):
       getTodosQuery = `
             SELECT 
@@ -59,7 +59,7 @@ app.get('/todos/', async (request, response) => {
                 AND status = '${status}'
                 AND priority = '${priority}'; `
       break
-    case hasPriorityProperty(requrst.query):
+    case hasPriorityProperty(request.query):
       getTodosQuery = `
            SELECT 
            * 
@@ -129,15 +129,15 @@ app.put('/todos/:todoId/', async (request, response) => {
   const requestBody = request.body
 
   switch (true) {
-    case requestbody.status !== undefined:
+    case requestBody.status !== undefined:
       updateColumn = 'Status'
       break
 
-    case requestbody.priority !== undefined:
+    case requestBody.priority !== undefined:
       updateColumn = 'priority'
       break
 
-    case requestbody.todo !== undefined:
+    case requestBody.todo !== undefined:
       updateColumn = 'Todo'
       break
   }
@@ -165,7 +165,7 @@ app.put('/todos/:todoId/', async (request, response) => {
     
     todo = '${todo}',
     priority ='${priority}',
-    status = '${status}',
+    status = '${status}'
     
     WHERE
     id = ${todoId};`
@@ -183,7 +183,7 @@ app.delete('/todos/:todoId/', async (request, response) => {
     id = ${todoId};`
 
   await database.run(deleteTodoQuery)
-  Response.send('Todo Deleted')
+  response.send('Todo Deleted')
 })
 
 module.exports = app
